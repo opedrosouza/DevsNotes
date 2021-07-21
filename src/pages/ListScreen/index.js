@@ -1,5 +1,5 @@
 import React, { useLayoutEffect } from 'react'
-import { useNavigation } from '@react-navigation/core'
+import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 
 import { AddButton, Container, NotesList, NoNotes, NoNotesText, Text } from './style'
@@ -11,8 +11,7 @@ import { faPlus, faBook } from '@fortawesome/free-solid-svg-icons'
 
 export default () => {
   const navigation = useNavigation()
-  // const list = useSelector(state => state.notes.list)
-  const list = []
+  const list = useSelector(state => state.notes.list)
 
   useLayoutEffect(() => {
     navigation.setOptions({
