@@ -1,14 +1,58 @@
-import React from 'react'
-import { Container, Text, Button } from './style'
+import React, { useLayoutEffect } from 'react'
 import { useNavigation } from '@react-navigation/core'
+import { useSelector } from 'react-redux'
+
+import { AddButton, Container, NotesList, NoNotes, NoNotesText, Text } from './style'
+import NoteItem from '../../components/NoteItem'
+
+// FontAwesome Components
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faPlus, faBook } from '@fortawesome/free-solid-svg-icons'
 
 export default () => {
   const navigation = useNavigation()
+  // const list = useSelector(state => state.notes.list)
+  const list = []
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'Suas notas',
+      headerRight: () => (
+        <AddButton underlayColor="transparent" onPress={() => navigation.navigate('EditNote')}>
+          <FontAwesomeIcon icon={ faPlus } color="#fff" size={20} />
+        </AddButton>
+      )
+    })
+  }, [])
+
+  const handleNotePress = (index) => {
+    navigation.navigate('EditNote', {
+      key: index
+    })
+  }
 
   return (
     <Container>
-      <Text>Tela de Listar</Text>
-      <Button title="Ir para Editar" onPress={() => navigation.navigate('EditNote')} />
+      { list.length > 0 &&
+        <NotesList 
+          data={list}
+          renderItem={({ item, index }) => (
+            <NoteItem 
+              data={item}
+              index={index}
+              onPress={handleNotePress}
+            />
+          )}
+          keyExtrator={(item, index) => index.toString()}
+        />
+      }
+
+      { list.length == 0 &&
+        <NoNotes>
+          <FontAwesomeIcon icon={ faBook } color="#fff" size={50} />
+          <NoNotesText>Nenhuma nota adicionada</NoNotesText>
+        </NoNotes>
+      }
     </Container>
   )
 }
